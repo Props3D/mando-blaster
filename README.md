@@ -48,12 +48,14 @@ wiring, and audio tracks.
 #define TRACK_CLIP_RELOAD     7
 #define TRACK_CLIP_EMPTY      8
 #define TRACK_THEME           9
-static const int TRACK_FIRE_ARR[]    = {TRACK_FIRE_A, TRACK_FIRE_B};
-static const int TRACK_STUN_ARR[]    = {TRACK_STUN_A, TRACK_STUN_B};
 
 // Common constant definitions - DO NOT CHANGE
 #define SELECTOR_FIRE_MODE 1
 #define SELECTOR_STUN_MODE 2
+
+static const int TRACK_FIRE_ARR[]    = {TRACK_FIRE_A, TRACK_FIRE_B};
+static const int TRACK_STUN_ARR[]    = {TRACK_STUN_A, TRACK_STUN_B};
+
 ```
 
 ## Example Wiring Diagram:

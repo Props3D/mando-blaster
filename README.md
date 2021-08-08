@@ -13,6 +13,13 @@ Single LED - Neopixel
 Lipo 7.4v
 
 
+## Required Libraries
+There's are number of libraries that you will need to install using the  Library Manager:
+ 1. DFPlayerMini_Fast
+ 2. FastLED
+ 4. FireTimer
+ 5. ezButton
+
 ## Setup and Configuration
 The code can be used by updating the values in config.h based on your components,
 wiring, and audio tracks.
@@ -57,6 +64,16 @@ static const int TRACK_FIRE_ARR[]    = {TRACK_FIRE_A, TRACK_FIRE_B};
 static const int TRACK_STUN_ARR[]    = {TRACK_STUN_A, TRACK_STUN_B};
 
 ```
+
+## Audio File Setup
+The DF Mini Player will play back both mp3 and wav files. However, the program play
+back tracks based on index. The index is determined by the order the files are loaded
+onto the card. It also expects all files to be loaded into a sub directory on the card
+called "/mp3".
+
+When using a MAC to load files, it will create hidden files that will cause the playback
+to seem like it's not working. You'll need to use the terminal window to rm all of these
+files and directories from the card.
 
 ## Example Wiring Diagram:
 ![SampleWiring.jpg]

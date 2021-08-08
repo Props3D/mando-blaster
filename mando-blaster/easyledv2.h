@@ -36,7 +36,7 @@ class EasyLedv2
     CRGB leds[LED_COUNT];
     CRGB currentColor;  // starting color
     CRGB targetColor;   // target color
-    const uint8_t fadeRate = 42;   // larger number is a slower fade
+    const uint8_t fadeRate = 13;   // larger number is a slower fade
     boolean fadeToColor = 0;       // turns on/off the fading toward target
     uint8_t blendRate = 2;   // larger number is a slower fade
 

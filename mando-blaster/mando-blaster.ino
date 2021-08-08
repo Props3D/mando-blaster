@@ -1,7 +1,7 @@
 /**
  * This is the main file for the mando blaster setup.
  * 
- * All components are controlled or enabled by "config.h". Before running, 
+ * All components settings can be found in "config.h". Before running, 
  * review and change all configurations based on your setup.
  * 
  * There's are number of libraries that you will need to install using the 

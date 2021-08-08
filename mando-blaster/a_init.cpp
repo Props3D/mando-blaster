@@ -44,15 +44,15 @@ void setup () {
   trigger.begin(25);
 
   //initializes the audio player and sets the volume
-  audio.begin(22);
+  audio.begin(20);
 
   // initialize all the leds
   // initialize the trigger led and set brightness
   fireLed.begin(75);
 
   // Initialize the clip counters for different modes
-  fireCounter.begin(0, 5, COUNTER_MODE_DOWN);
-  stunCounter.begin(0, 5, COUNTER_MODE_DOWN);
+  fireCounter.begin(0, 10, COUNTER_MODE_DOWN);
+  stunCounter.begin(0, 10, COUNTER_MODE_DOWN);
 }
 
 void loop () {
@@ -115,7 +115,7 @@ void sendBlasterPulse(EasyCounter &counter, int waitTime) {
     if (selectedTriggerMode == SELECTOR_FIRE_MODE) {
       fireLed.blasterShot(fireLed.RED, fireLed.ORANGE);
     } else {
-      fireLed.blasterShot(fireLed.BLUE, fireLed.WHITE);
+      fireLed.blasterShot(fireLed.YELLOW, fireLed.WHITE);
     }
   }
 }

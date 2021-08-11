@@ -8,13 +8,16 @@
  * configuration section.
  */
 
-// Enable debug logging
-// enabled == 1
-// disabled == 0
-#define ENABLE_DEBUG        1
+/** 
+ * Enable debug logging:
+ *    enabled == 1
+ *    disabled == 0
+ */
+#define ENABLE_DEBUG         1
 
 // Comment out if you want to disable audio
-#define ENABLE_AUDIO        1
+#define ENABLE_EASY_AUDIO          1 //Enable all audio 
+#define ENABLE_EASY_BUTTON         1 //Enable all buttons
 
 // Pin configuration for MP3 Player
 #define AUDIO_RX_PIN        10
@@ -39,8 +42,8 @@
 #define TRACK_THEME           9
 
 // Common constant definitions - DO NOT CHANGE
-static const int TRACK_FIRE_ARR[]    = {TRACK_FIRE_A, TRACK_FIRE_B};
-static const int TRACK_STUN_ARR[]    = {TRACK_STUN_A, TRACK_STUN_B};
+static const uint8_t TRACK_FIRE_ARR[]    = {TRACK_FIRE_A, TRACK_FIRE_B};
+static const uint8_t TRACK_STUN_ARR[]    = {TRACK_STUN_A, TRACK_STUN_B};
 
 #define SELECTOR_FIRE_MODE 1
 #define SELECTOR_STUN_MODE 2

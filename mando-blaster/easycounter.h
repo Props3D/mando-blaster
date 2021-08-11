@@ -24,15 +24,15 @@ const static int COUNTER_MODE_DOWN = -1;
 class EasyCounter
 {
   private:
-    char* name;
+    String name;
     int8_t increment = COUNTER_MODE_DOWN;
     uint8_t low;
     uint8_t high;
     uint8_t currentCounter;
     // file indexes for different states
-    int activeTrackIdx[2];
-    int emptyTrackIdx;
-    int resetTrackIdx;
+    uint8_t activeTrackIdx[2];
+    uint8_t emptyTrackIdx;
+    uint8_t resetTrackIdx;
  
     // helper functions
     void setLow(int number) { this->low = number; }
@@ -40,7 +40,8 @@ class EasyCounter
     void setIncrement(int value) { this->increment = value; }
     void setCount(int value) { this->currentCounter = value; }
   public:
-    EasyCounter::EasyCounter(char* label, int activeTracks[], int emptyTrack, int resetTrack) : name(label) {
+    EasyCounter(const char *label) : name(label) {}
+    EasyCounter(const char *label, uint8_t activeTracks[], uint8_t emptyTrack, uint8_t resetTrack) : name(label) {
       this->activeTrackIdx[0] = activeTracks[0];
       this->activeTrackIdx[1] = activeTracks[1];
       this->emptyTrackIdx = emptyTrack;
@@ -55,16 +56,16 @@ class EasyCounter
       resetCount();
     }  
 
-    int EasyCounter::toggleCount() {
-      if (isEmpty()) return -1;
+    EasyCounter* EasyCounter::tick() {
+      if (isEmpty()) return this;
       if (increment == COUNTER_MODE_UP) 
           currentCounter = currentCounter + 1;
        else
           currentCounter = currentCounter - 1;
-      return currentCounter;
+      return this;
     }
 
-    bool EasyCounter::isEmpty() {
+    bool isEmpty() {
       if (increment == COUNTER_MODE_UP)
         return (currentCounter == high);
       if (increment == COUNTER_MODE_DOWN)
@@ -72,7 +73,7 @@ class EasyCounter
       return false;
     }
 
-    bool EasyCounter::isFull() {
+    bool isFull() {
       if (increment == COUNTER_MODE_UP)
         return (currentCounter == low);
       if (increment == COUNTER_MODE_DOWN)
@@ -85,12 +86,18 @@ class EasyCounter
         setCount(low);
       if (increment == COUNTER_MODE_DOWN)
         setCount(high);
-      debug.log(name + String(" reset counter: ") + currentCounter);
+      debug.log(name + String(" reset counter: ") + String(currentCounter));
       return this->currentCounter;
     }
 
     uint8_t getCount() {
       return this->currentCounter;
+    }
+
+    uint8_t getTrackNumber() {
+      if (isEmpty()) return this->emptyTrackIdx;
+      if (isFull()) return this->resetTrackIdx;
+      return this->activeTrackIdx[0];
     }
 
     uint8_t getTrackNumber(int index) {

@@ -30,8 +30,8 @@ class EasyAudio
     EasyAudio(uint8_t rxPin = 0, uint8_t txPin = 1) : mySerial(rxPin, txPin) {};
 
     void begin(uint8_t vol) {
-#ifdef ENABLE_AUDIO
-      debug.log("setup audio");
+#ifdef ENABLE_EASY_AUDIO
+      debugLog("setup audio");
       mySerial.begin(9600);
       player.begin(mySerial, 100); //set Serial for DFPlayer-mini mp3 module 
       player.volume (vol);     //initial volume, 30 is max, 3 makes the wife not angry
@@ -39,8 +39,8 @@ class EasyAudio
     }
 
     void playTrack(int track) {
-#ifdef ENABLE_AUDIO
-      debug.log("playing track ");
+#ifdef ENABLE_EASY_AUDIO
+      debugLog("playing track ");
       player.playFromMP3Folder( track ); 
 #endif
     }

@@ -3,14 +3,14 @@ This is a simple Arduino sketch for building electronic kits for various 3d prin
 blasters using Ardunio components.
 
 ## Arduino Components
-Arduino Nano v3
-DF Player Mini
-Speaker Amp - PAM8302A
-Single LED - Neopixel
-40mm 2W speaker
-7mm momentary switch
-5v Regulator - LM2596
-Lipo 7.4v
+* Arduino Nano v3
+* DF Player Mini
+* Speaker Amp - PAM8302A
+* Single LED - Neopixel
+* 40mm 2W speaker
+* 7mm momentary switch
+* 5v Regulator - LM2596
+* Lipo 7.4v
 
 
 ## Required Libraries
@@ -25,14 +25,11 @@ The code can be used by updating the values in config.h based on your components
 wiring, and audio tracks.
 
 ```c++   
-
-// Enable debug logging
-// enabled == 1
-// disabled == 0
-#define ENABLE_DEBUG        1
+#define ENABLE_DEBUG               0
 
 // Enable any items in your setup by uncommenting
-#define ENABLE_AUDIO                 1
+#define ENABLE_EASY_AUDIO          1 //Enable all audio 
+#define ENABLE_EASY_BUTTON         1 //Enable all buttons
 
 // Pin configuration for MP3 Player
 #define AUDIO_RX_PIN        10
@@ -55,14 +52,6 @@ wiring, and audio tracks.
 #define TRACK_CLIP_RELOAD     7
 #define TRACK_CLIP_EMPTY      8
 #define TRACK_THEME           9
-
-// Common constant definitions - DO NOT CHANGE
-#define SELECTOR_FIRE_MODE 1
-#define SELECTOR_STUN_MODE 2
-
-static const int TRACK_FIRE_ARR[]    = {TRACK_FIRE_A, TRACK_FIRE_B};
-static const int TRACK_STUN_ARR[]    = {TRACK_STUN_A, TRACK_STUN_B};
-
 ```
 
 ## Audio File Setup
@@ -76,5 +65,4 @@ to seem like it's not working. You'll need to use the terminal window to rm all 
 files and directories from the card.
 
 ## Example Wiring Diagram:
-![SampleWiring.jpg]
-
+![docs/SampleWiring.png](docs/SampleWiring.png)

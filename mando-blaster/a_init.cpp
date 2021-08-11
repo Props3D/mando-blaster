@@ -10,7 +10,7 @@
 #include "easybutton.h"
 #include "easycounter.h"
 #include "easyaudio.h"
-#include "easyledv2.h"
+#include "easyledv3.h"
 
 /**
  * All components are controlled or enabled by "config.h". Before running, 
@@ -20,26 +20,29 @@
  */
 EasyAudio audio(AUDIO_RX_PIN, AUDIO_TX_PIN);
 EasyButton trigger(TRIGGER_PIN);
-EasyLedv2<SINGLE_LED_CNT, FIRE_LED_PIN> fireLed;
+
+EasyLedv3<SINGLE_LED_CNT, FIRE_LED_PIN> fireLed;
+ezBlasterShot blasterShot(fireLed.RED, fireLed.ORANGE);  // initialize colors to starting fire mode
+
 EasyCounter fireCounter("fire", TRACK_FIRE_ARR, TRACK_CLIP_EMPTY, TRACK_CLIP_RELOAD);
 EasyCounter stunCounter("stun", TRACK_STUN_ARR, TRACK_CLIP_EMPTY, TRACK_CLIP_RELOAD);
 
 
 // trigger mode status
-int selectedTriggerMode   = SELECTOR_FIRE_MODE;   // sets the fire mode to blaster to start
-int playStartupSound      = 1;           // startup sound variable
+uint8_t selectedTriggerMode   = SELECTOR_FIRE_MODE;   // sets the fire mode to blaster to start
+bool playStartupSound          = 1;                    // play ower up sound on startup
 
 // function declarations
 void powerUp();
 void handleFireTrigger();
 void handleLedDisplay();
 void handleSelectorMode(int state);
-void sendBlasterPulse(EasyCounter &counter, int waitTime);
+void sendBlasterPulse(EasyCounter &counter);
 EasyCounter& getTriggerCounter();
 
 void setup () {
   Serial.begin (9600);
-  debug.log("Starting setup");
+  debugLog("Starting setup");
   // set up the fire trigger and the debounce threshold
   trigger.begin(25);
 
@@ -67,7 +70,7 @@ void loop () {
  */
 void powerUp() {
   if (playStartupSound) {
-    debug.log("Powering up");
+    debugLog("Powering up");
     audio.playTrack(TRACK_START_UP);
     playStartupSound = 0;
   }
@@ -83,7 +86,7 @@ void handleFireTrigger() {
   int buttonStateFire = trigger.checkState();
   // check if a trigger is pressed.
   if (buttonStateFire == BUTTON_SHORT_PRESS) {
-      sendBlasterPulse(getTriggerCounter(), 100);
+      sendBlasterPulse(getTriggerCounter());
   }
   if (buttonStateFire == BUTTON_LONG_PRESS) {
     handleSelectorMode(buttonStateFire);
@@ -104,19 +107,20 @@ void handleLedDisplay() {
  *   4. Otherwise play empty clip track
  *
  */
-void sendBlasterPulse(EasyCounter &counter, int waitTime) {
-  debug.log("send alternating blaster pulse");
-  // alternate between two firing blasts
+void sendBlasterPulse(EasyCounter &counter) {
+  debugLog("send alternating blaster pulse");
   bool emptyClip = counter.isEmpty();
-  uint8_t idx = counter.toggleCount() % 2;
-  int track = counter.getTrackNumber(idx);
+  bool fullClip = counter.isFull();
+  // check the track number before ticking, in case it's the last round
+  // alternate between two firing blasts
+  uint8_t idx = counter.getCount() % 2;
+  int track = counter.getTrackNumber(idx); // returns the approapriate track, or empty clip
+  counter.tick();
+  if (fullClip)
+    track = counter.getTrackNumber(idx);   // We redo this when the clip is full to get the right track
   audio.playTrack(track);
   if (emptyClip == false) {
-    if (selectedTriggerMode == SELECTOR_FIRE_MODE) {
-      fireLed.blasterShot(fireLed.RED, fireLed.ORANGE);
-    } else {
-      fireLed.blasterShot(fireLed.YELLOW, fireLed.WHITE);
-    }
+    fireLed.activate(blasterShot);
   }
 }
 
@@ -137,10 +141,12 @@ void handleSelectorMode(int buttonStateMode) {
   // Check for Switching modes
   if (selectedTriggerMode == SELECTOR_FIRE_MODE) {
     selectedTriggerMode = SELECTOR_STUN_MODE;
-    debug.log("Stun Mode selected");
+    blasterShot.initialize(fireLed.YELLOW, fireLed.WHITE);  // shot - flash with color fade
+    debugLog("Stun Mode selected");
   } else {
     selectedTriggerMode = SELECTOR_FIRE_MODE;
-    debug.log("Fire Mode selected");
+    blasterShot.initialize(fireLed.RED, fireLed.ORANGE);  // shot - flash with color fade
+    debugLog("Fire Mode selected");
   }
   audio.playTrack(TRACK_CHANGE_MODE);
   delay (100);

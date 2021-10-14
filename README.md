@@ -5,11 +5,12 @@ blasters using Ardunio components.
 ## Arduino Components
 * Arduino Nano v3
 * DF Player Mini
+* Micro SD card (8MB or larger)
 * Speaker Amp - PAM8302A
 * Single LED - Neopixel
 * 40mm 2W speaker
 * 7mm momentary switch
-* 5v Regulator - LM2596
+* Mini 360 DC-DC Buck Converter
 * Lipo 7.4v
 
 

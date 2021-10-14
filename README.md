@@ -14,8 +14,8 @@ Speaker Amp - PAM8302A | Single LED - Neopixel
 40mm 2W speaker | 7mm momentary switch
 ![Mini 360 DC-DC Buck Converter](https://user-images.githubusercontent.com/20442880/137374870-9687ea11-6a7c-48f6-8c0b-2ff4e34c62d3.jpg) | ![Lipo 7 4v](https://user-images.githubusercontent.com/20442880/137374882-cb61cde1-8c05-4817-9e06-7526e851bfad.jpg)
 Mini 360 DC-DC Buck Converter | Lipo 7.4v
-![1K Resister](https://user-images.githubusercontent.com/20442880/137374919-023f0bea-65f6-46a1-9d45-69f5a79e6916.jpg) | ![DRV2605L with 8mm ERM](https://user-images.githubusercontent.com/20442880/137374950-a2673b35-5a02-46b6-b322-de556f20e97e.jpg)
-2 X 1K Resister | DRV2605L with 8mm ERM (Optional)
+![1K Resister](https://user-images.githubusercontent.com/20442880/137374919-023f0bea-65f6-46a1-9d45-69f5a79e6916.jpg) | ![JST Connector Female](https://user-images.githubusercontent.com/20442880/137407170-16a0f162-931e-4dc7-86a8-38b767016b50.jpg)
+2 X 1K Resister | JST Connector Female
 
 ## Required Libraries
 There's are number of libraries that you will need to install using the  Library Manager:

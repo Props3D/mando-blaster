@@ -50,11 +50,11 @@ wiring, and audio tracks.
 #define ENABLE_EASY_BUTTON         1 //Enable all buttons
 
 // Pin configuration for MP3 Player
-#define AUDIO_RX_PIN        10
-#define AUDIO_TX_PIN        11
+#define AUDIO_TX_PIN        5
+#define AUDIO_RX_PIN        4
 
 // Pin configuration for all momentary triggers
-#define TRIGGER_PIN         8
+#define TRIGGER_PIN         3
 
 // Pin configuration for front barrel WS2812B LED
 #define SINGLE_LED_CNT      1

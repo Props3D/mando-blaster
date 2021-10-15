@@ -1,5 +1,7 @@
 ## mando-blaster V0.4 - Prerelease
-Code for the Star Wars Mandalorian blaster from Props 3D
+![Product Shot - Mando Blaster](https://user-images.githubusercontent.com/20442880/137564306-f32b4494-f58a-401b-821f-e71faf7dd330.jpg)
+
+Repository for the Star Wars Mandalorian blaster from Props3D
 
 Note that prerelease models have been tested and work, but do not come with instructions or guarantee that everything fits together properly. If you want have feedback please post on our discord(https://discord.gg/NSfZcCfJU6) on the #project-mandalorian-mando-blaster channel
 
@@ -82,5 +84,9 @@ When using a MAC to load files, it will create hidden files that will cause the 
 to seem like it's not working. You'll need to use the terminal window to rm all of these
 files and directories from the card.
 
-## Example Wiring Diagram:
+## Example Wiring Diagram
 ![docs/SampleWiring.png](docs/SampleWiring.png)
+
+## Demo Circuit
+![IB94](https://user-images.githubusercontent.com/20442880/137564364-2bee8729-d97a-4b55-9c33-e0973057ff75.JPG)
+

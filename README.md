@@ -1,7 +1,11 @@
 ## mando-blaster V0.4 - Prerelease
 ![Product Shot - Mando Blaster](https://user-images.githubusercontent.com/20442880/137564306-f32b4494-f58a-401b-821f-e71faf7dd330.jpg)
 
-Repository for the Star Wars Mandalorian blaster from Props3D
+Repository for the Star Wars Mandalorian blaster from Props3D. 
+
+Licensed under theCreative Commons - Attribution - Non-Commercial - Share Alike license. https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+*DO NOT SELL THIS WITHOUT PERMISSION*
 
 Note that prerelease models have been tested and work, but do not come with instructions or guarantee that everything fits together properly. If you want have feedback please post on our discord(https://discord.gg/NSfZcCfJU6) on the #project-mandalorian-mando-blaster channel
 

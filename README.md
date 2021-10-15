@@ -1,6 +1,13 @@
-## mando-blaster 1.0
-This is a simple Arduino sketch for building electronic kits for various 3d printed
-blasters using Ardunio components.
+## mando-blaster V0.4 - Prerelease
+Code for the Star Wars Mandalorian blaster from Props 3D
+
+Note that prerelease models have been tested and work, but do not come with instructions or guarantee that everything fits together properly. If you want have feedback please post on our discord(https://discord.gg/NSfZcCfJU6) on the #project-mandalorian-mando-blaster channel
+
+## Props 3D
+* Join the Props3D Discord: https://discord.gg/NSfZcCfJU6
+* Follow progress on instagram: https://www.instagram.com/props3dpro/ or https://www.instagram.com/craiggulliver/
+* Subscribe on Youtube: https://www.youtube.com/c/Props3D
+* Download released designs: https://www.thingiverse.com/props3dpro/designs
 
 ## Electonic Components
 
@@ -17,8 +24,15 @@ Mini 360 DC-DC Buck Converter | Lipo 7.4v
 ![1K Resister](https://user-images.githubusercontent.com/20442880/137374919-023f0bea-65f6-46a1-9d45-69f5a79e6916.jpg) | ![JST Connector Female](https://user-images.githubusercontent.com/20442880/137407170-16a0f162-931e-4dc7-86a8-38b767016b50.jpg)
 2 X 1K Resister | JST Connector Female
 
+
+## Parts
+
+* M4X6mm~8mm button X 4 - Grips
+* M3X10mm Button x 1 - Hammer
+* M3X6mm Socket X 6 - Body Cover
+
 ## Required Libraries
-There's are number of libraries that you will need to install using the  Library Manager:
+There's are number of libraries that you will need to install using the Library Manager:
  1. DFPlayerMini_Fast
  2. FastLED
  4. FireTimer

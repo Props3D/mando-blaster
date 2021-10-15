@@ -15,7 +15,7 @@
  */
 #define ENABLE_DEBUG         1
 
-// Comment out if you want to disable audio
+// Comment out if you want to disable any components
 #define ENABLE_EASY_AUDIO          1 //Enable all audio 
 #define ENABLE_EASY_BUTTON         1 //Enable all buttons
 
@@ -24,11 +24,11 @@
 #define AUDIO_TX_PIN        11
 
 // Pin configuration for all momentary triggers
-#define TRIGGER_PIN         8
+#define TRIGGER_PIN         8 
 
 // Pin configuration for front barrel WS2812B LED
 #define SINGLE_LED_CNT      1
-#define FIRE_LED_PIN        13 
+#define FIRE_LED_PIN        13
 
 // track by file index - upload these to the SD card in the correct order
 #define TRACK_START_UP        1

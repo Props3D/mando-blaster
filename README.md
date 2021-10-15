@@ -3,17 +3,19 @@
 
 Repository for the Star Wars Mandalorian blaster from Props3D. 
 
-Licensed under theCreative Commons - Attribution - Non-Commercial - Share Alike license. https://creativecommons.org/licenses/by-nc-sa/4.0/
+Licensed under the Creative Commons - Attribution - Non-Commercial - Share Alike license. https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 ***DO NOT SELL OR DISTRIBUTE MODELS OR CODE WITHOUT PERMISSION***
 
-Note that prerelease models have been tested and work, but do not come with instructions or guarantee that everything fits together properly. If you want have feedback please post on our discord(https://discord.gg/NSfZcCfJU6) on the #project-mandalorian-mando-blaster channel
+Note that prerelease models have been tested and work, but do not come with instructions or guarantee that everything fits together properly. If you want have feedback please post on our Discord (https://discord.gg/NSfZcCfJU6) on the #project-mando-blaster channel
 
 ## Props 3D
 * Join the Props3D Discord: https://discord.gg/NSfZcCfJU6
 * Follow progress on instagram: https://www.instagram.com/props3dpro/ or https://www.instagram.com/craiggulliver/
 * Subscribe on Youtube: https://www.youtube.com/c/Props3D
 * Download released designs: https://www.thingiverse.com/props3dpro/designs
+
+
 
 ## Electonic Components
 

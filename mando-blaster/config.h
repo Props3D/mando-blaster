@@ -13,18 +13,18 @@
  *    enabled == 1
  *    disabled == 0
  */
-#define ENABLE_DEBUG         1
+#define ENABLE_DEBUG               0
 
 // Comment out if you want to disable any components
 #define ENABLE_EASY_AUDIO          1 //Enable all audio 
 #define ENABLE_EASY_BUTTON         1 //Enable all buttons
 
 // Pin configuration for MP3 Player
-#define AUDIO_RX_PIN        10
-#define AUDIO_TX_PIN        11
+#define AUDIO_TX_PIN        5
+#define AUDIO_RX_PIN        4
 
 // Pin configuration for all momentary triggers
-#define TRIGGER_PIN         8 
+#define TRIGGER_PIN         3 
 
 // Pin configuration for front barrel WS2812B LED
 #define SINGLE_LED_CNT      1

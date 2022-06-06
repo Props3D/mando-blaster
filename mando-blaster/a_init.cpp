@@ -47,7 +47,7 @@ void setup () {
   trigger.begin(25);
 
   //initializes the audio player and sets the volume
-  audio.begin(20);
+  audio.begin(25);
 
   // initialize all the leds
   // initialize the trigger led and set brightness

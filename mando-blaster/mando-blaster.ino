@@ -6,9 +6,7 @@
  * 
  * There's are number of libraries that you will need to install using the 
  * Library Manager:
- * 1. DFPlayerMini_Fast
  * 2. FastLED
- * 4. FireTimer
  * 5. ezButton
  * 
  * The main loop:

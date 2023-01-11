@@ -1,8 +1,8 @@
 /*
- * name:  ez-blaster
+ * name:  a_init.cpp
  * Author:  FriskyDingo
  * Date:  2021-07-14
- * Description: Universal code for various blaster setups
+ * Description: Code for Mando blaster
  */
 #include <Arduino.h>
 #include "config.h"

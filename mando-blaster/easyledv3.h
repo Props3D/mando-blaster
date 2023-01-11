@@ -1,17 +1,15 @@
 #ifndef easyledv3_h
 #define easyledv3_h
 
-#include <Arduino.h>
 #include <FastLED.h>
 #include "ezPattern.h"
-#include "debug.h"
 
 
 /**
  * A simple class for managing a collection of WS2812 leds.
  *
  * Use the delcaration to specify the LED configuration at compile time:
- * eg. EasyLedsv3<LED_STRIP_PIN, NUM_LEDS, SINGLE_LED_PIN> leds;
+ * eg. EasyLedsv3<LED_STRIP_PIN, NUM_LEDS> leds;
  * 
  * In the setup, you can use the begin() function to initialize the brightness.
  * eg. leds.begin(75);
@@ -30,14 +28,13 @@
  * 
  * REQUIRED LIBRARY: FastLED
  */
-
 template <int LED_COUNT, int LED_PIN_IN>
 class EasyLedv3
 {
   protected:
     // variable declaration
     CRGB leds[LED_COUNT];
-    ezPattern *pattern = 0;
+    volatile ezPattern *pattern = 0;
 
   public:
     //some constants for functions
@@ -53,37 +50,57 @@ class EasyLedv3
     EasyLedv3() {};
     
     void begin(int brightness) {
+#if ENABLE_EASY_LED == 1
       if (LED_COUNT > 0 && LED_PIN_IN > 0) {
+        //DBGLN(F("Initializing leds"));
         FastLED.addLeds<WS2812, LED_PIN_IN, GRB>(leds, LED_COUNT);
         FastLED.setBrightness(brightness);
         FastLED.setMaxPowerInVoltsAndMilliamps(5, 450); //5v and 450mA
         clear();
       }
+#endif
     }
 
     //===============================================================
     // Apply LED color changes
     void clear() {
+#if ENABLE_EASY_LED == 1
         FastLED.clear();
         FastLED.show();
+#endif
     }
 
     void show() {
+#if ENABLE_EASY_LED == 1
       FastLED.show();
+#endif
     }
 
     // fill all leds with solid color
     void fill(CRGB color) {
+#if ENABLE_EASY_LED == 1
         fill_solid(leds, LED_COUNT, color);
+#endif
     }
 
     // Set a LED color (not yet visible)
     void setPixel(int Pixel, byte red, byte green, byte blue) {
+#if ENABLE_EASY_LED == 1
       if (Pixel < LED_COUNT) {
         leds[Pixel].r = red;
         leds[Pixel].g = green;
         leds[Pixel].b = blue;
       }
+#endif
+    }
+
+    /**
+     *
+     */    
+    bool isActivated(void) {
+      if (pattern)
+        return pattern->isActivated();
+      return false;
     }
 
     /**
@@ -91,22 +108,28 @@ class EasyLedv3
      * See ezPattern for classes.
      */
     void activate(ezPattern &ptn) {
-      debugLog("activating led pattern");
+#if ENABLE_EASY_LED == 1
+      //DBGLN(F("activating led pattern"));
       pattern = &ptn;
       if (pattern)
         pattern->activate(leds, LED_COUNT);
+#endif
     }
 
     /**
      * This should be called in the main program loop().
      * The call is a proxy to the ezPattern, if one has been provided.
      */
-    void updateDisplay() {
+    bool updateDisplay() {
+#if ENABLE_EASY_LED == 1
       if(LED_COUNT > 0 && LED_PIN_IN > 0) {
         if (pattern)
-          pattern->updateDisplay(leds, LED_COUNT);
+          return pattern->updateDisplay(leds, LED_COUNT);
       }
+#endif
+      return false;
     }
 };
+
 
 #endif

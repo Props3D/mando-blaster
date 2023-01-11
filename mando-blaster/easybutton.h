@@ -3,21 +3,16 @@
 
 #include <Arduino.h>
 #include <ezButton.h>
-#include "debug.h"
-
-const static int BUTTON_NOT_PRESSED  = 0;
-const static int BUTTON_SHORT_PRESS  = 1;
-const static int BUTTON_HOLD_PRESS   = 2;
-const static int BUTTON_LONG_PRESS   = 3;
 
 /**
  * Use EasyButton to track state on a specific pin.
  * It uses the onboard resistor (INPUT_PULL).
  * Supports tracking following conditions:
  *   BUTTON_NOT_PRESSED - no state change
+ *   BUTTON_PRESSED - initial state change
  *   BUTTON_SHORT_PRESS - Short Press on release
  *   BUTTON_LONG_PRESS - Long Press on release
- *   BUTTON_HOLD_PRESS - Press and Hold
+ *   BUTTON_HOLD_PRESS - Pressed and Hold
  * eg. EasyButton selectorOnPin8(8);
  *
  * Call the begin() function in the setup to initilize the pin mode, and set a debouce value.
@@ -37,11 +32,16 @@ class EasyButton
     unsigned long releasedTime = 0;
     bool isPressing = false;
     bool isLongDetected = false;
-    const uint8_t SHORT_PRESS_TIME = 200;  // 200 milliseconds
-    const uint8_t LONG_PRESS_TIME  = 1000; // 1000 milliseconds
 
   public:
-#ifdef ENABLE_EASY_BUTTON
+    static const int BUTTON_NOT_PRESSED = 0;
+    static const int BUTTON_PRESSED     = 1;
+    static const int BUTTON_SHORT_PRESS = 2;
+    static const int BUTTON_HOLD_PRESS  = 3;
+    static const int BUTTON_LONG_PRESS  = 4;
+    static const uint16_t LONG_PRESS_TIME  = 2000; // 2 seconds
+
+#if ENABLE_EASY_BUTTON == 1
     EasyButton(uint8_t pin, bool signalOnRelease = true) : button(pin) {
       longPressOnRelease = signalOnRelease;
       button.setDebounceTime(50); // set debounce time to 50 milliseconds
@@ -58,38 +58,40 @@ class EasyButton
     }
 
     int checkState() {
-#ifdef ENABLE_EASY_BUTTON
+#if ENABLE_EASY_BUTTON == 1
       button.loop(); // MUST call the loop() function first
-    
+      // track previous state to capture initial press
+      bool wasPressed = isPressing;
       if(button.isPressed()){
-        debugLog("button pressed");
+        //DBGLN(F("button pressed"));
         pressedTime = millis();
         isPressing = true;
         isLongDetected = false;
       }
     
       if(button.isReleased() && isPressing == true) {
-        debugLog("button released");
+        //DBGLN(F("button released"));
         releasedTime = millis();
         long pressDuration = releasedTime - pressedTime;
+        //DBGLN(pressDuration);
 
         // check if we have a short press
         if( pressDuration <= LONG_PRESS_TIME ) {
           isPressing = false;
           isLongDetected = false;
-          debugLog("A short press is detected");
+          //DBGLN(F("A short press is released"));
           return BUTTON_SHORT_PRESS;
         }
         // when configured, return long press on release
         if(longPressOnRelease && (pressDuration >= LONG_PRESS_TIME)) {
           isPressing = false;
           isLongDetected = true;
-          debugLog("A long press is detected");
+          //DBGLN(F("A long press is released"));
           return BUTTON_LONG_PRESS;
         }
         if(!longPressOnRelease && isLongDetected) {
           isPressing = false;
-          debugLog("A long press released");
+          //DBGLN(F("A long press released"));
         }
       }
 
@@ -98,20 +100,17 @@ class EasyButton
         long pressDuration = millis() - pressedTime;
     
         if( pressDuration > LONG_PRESS_TIME ) {
-          debugLog("A long press is detected");
+          //DBGLN(F("A long press is detected"));
           isLongDetected = true;
           return BUTTON_LONG_PRESS;
         }
       }
 
-      // held down
+      // initial press or button held down
       if (isPressing) {
-        long pressDuration = millis() - pressedTime;
-        // looping is fast, so release may not be detected
-        if (pressDuration > 500) {
-          debugLog("Button press held");
-          return BUTTON_HOLD_PRESS;
-        }
+        if (!wasPressed)
+          return BUTTON_PRESSED;
+        return BUTTON_HOLD_PRESS;
       }
 #endif
       // nothing happening

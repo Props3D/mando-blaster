@@ -19,11 +19,12 @@
 #define AUDIO_RX_PIN        4
 
 // Pin configuration for all momentary triggers
-#define TRIGGER_PIN         3 
+#define TRIGGER_PIN         3
 
 // Pin configuration for front barrel WS2812B LED
-#define SINGLE_LED_CNT      1
-#define FIRE_LED_PIN        13
+// set these to 0 if you want to disable the component
+#define FIRE_LED_PIN          13
+#define FIRE_LED_CNT          1
 
 /**
  * Audio tracks by file index - upload these to the SD card in the correct order.

@@ -20,7 +20,7 @@
 EasyAudio audio(AUDIO_RX_PIN, AUDIO_TX_PIN);
 EasyButton trigger(TRIGGER_PIN);
 
-EasyLedv3<SINGLE_LED_CNT, FIRE_LED_PIN> fireLed;
+EasyLedv3<FIRE_LED_CNT, FIRE_LED_PIN> fireLed;
 ezBlasterShot blasterShot(fireLed.RED, fireLed.ORANGE);  // initialize colors to starting fire mode
 
 EasyCounter fireCounter;
@@ -164,7 +164,7 @@ void handleAmmoDown(void) {
 void setNextAmmoMode(void) {
   // Increment the trigger mode index or reset to 0
   int mode = selectedTriggerMode + 1;
-  if (mode == 1) mode = 0;
+  if (mode == 2) mode = 0;
   changeAmmoMode(mode);
 }
 

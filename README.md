@@ -31,8 +31,7 @@ Speaker Amp - PAM8302A | Single LED - Neopixel
 Mini 360 DC-DC Buck Converter | Lipo 7.4v
 ![1K Resister](https://user-images.githubusercontent.com/20442880/137374919-023f0bea-65f6-46a1-9d45-69f5a79e6916.jpg) | ![JST Connector Female](https://user-images.githubusercontent.com/20442880/137407170-16a0f162-931e-4dc7-86a8-38b767016b50.jpg)
 2 X 1K Resister | JST Connector Female
-![5V 0.3 A Mini Size Black SPDT Slide Switch](https://user-images.githubusercontent.com/20442880/216387129-0b327d0d-836e-4df6-946a-a79e29c45d2c.jpg)
- | a
+![5V 0.3 A Mini Size Black SPDT Slide Switch](https://user-images.githubusercontent.com/20442880/216387129-0b327d0d-836e-4df6-946a-a79e29c45d2c.jpg) | a
 5V 0.3 A Mini Size Black SPDT Slide Switch | a
 
 

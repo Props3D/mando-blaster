@@ -9,7 +9,7 @@
  */
 
 // To disable any component set value to 0
-#define ENABLE_DEBUG            0 //Enable Debugging
+#define ENABLE_DEBUG            1 //Enable Debugging
 #define ENABLE_EASY_AUDIO       1 //Enable audio
 #define ENABLE_EASY_LED         1 //Enable LEDs
 #define ENABLE_EASY_BUTTON      1 //Enable triggers
@@ -42,8 +42,8 @@ static const int AUDIO_TRACK_AMMO_STUN_A       =   5;
 static const int AUDIO_TRACK_AMMO_STUN_B       =   6;
 static const int AUDIO_TRACK_AMMO_RELOAD       =   7;
 static const int AUDIO_TRACK_AMMO_EMPTY        =   8;
-static const int AUDIO_TRACK_THEME             =   9;
-
+static const int AUDIO_TRACK_SILENCE           =   9;
+static const int AUDIO_TRACK_THEME             =   10;
 
 /**
  *  Common constant definitions - DO NOT CHANGE
@@ -75,19 +75,30 @@ static const uint8_t AMMO_MODE_STUN = 2;
 /**
  * DEBUG Macros
  */
+extern inline void DBGLOG(const char* message) {
 #if ENABLE_DEBUG == 1
-#define DBGSTR(message) Serial.print(message)
-#define DBGBUF(buf, len) Serial.write(buf, len)
-#define DBGLN(message) Serial.println(message)
-#define DBGFMT(msg, fmt) Serial.print(msg, fmt)
-#define DBGCHAR(c) Serial.write(c)
-#else
-#define DBG(message)
-#define DBGSTR(message)
-#define DBGBUF(buf, len)
-#define DBGLN(message)
-#define DBGFMT(msg, fmt)
-#define DBGCHAR(c)
-#endif  // ENABLE_DEBUG
+   Serial.println(message);
+#endif
+}
+extern inline void DBGLN(const __FlashStringHelper* message) {
+#if ENABLE_DEBUG == 1
+   Serial.println(message);
+#endif
+}
+extern inline void DBGCH(char ch) {
+#if ENABLE_DEBUG == 1
+   Serial.print(ch);
+#endif
+}
+extern inline void DBGHEX(unsigned int ch) {
+#if ENABLE_DEBUG == 1
+   Serial.print(ch, HEX);
+#endif
+}
+extern inline void DBGSTR(const __FlashStringHelper* message) {
+#if ENABLE_DEBUG == 1
+   Serial.print(message);
+#endif
+}
 
 #endif

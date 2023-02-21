@@ -52,9 +52,9 @@ public:
    *      Number of ms allowed for the MP3 player to respond (timeout) to a query.
    *  Returns True.
    */
-  bool begin(Stream& stream, bool debug = false) {
+  bool begin(Stream& stream, bool variant = false) {
     _serial = &stream;
-    _debug = debug;
+    _variant = variant;
 
     sendStack.start_byte = dfplayer::SB;
     sendStack.version = dfplayer::VER;
@@ -101,7 +101,6 @@ public:
     sendData();
   }
 
-
 private:
   /**
    * Struct to store entire serial datapacket used for MP3 config/control 
@@ -119,9 +118,8 @@ private:
     uint8_t end_byte;
   } sendStack, recStack;
 
-
   Stream* _serial;
-  bool _debug;
+  bool _variant;
 
   /**
    *  Determine and insert the checksum of a given config/command packet into that same packet struct.
@@ -149,15 +147,16 @@ private:
     _serial->write(sendStack.feedbackValue);
     _serial->write(sendStack.paramMSB);
     _serial->write(sendStack.paramLSB);
-    _serial->write(sendStack.checksumMSB);
-    _serial->write(sendStack.checksumLSB);
+    if (!_variant) {
+      _serial->write(sendStack.checksumMSB);
+      _serial->write(sendStack.checksumLSB);
+    }
     _serial->write(sendStack.end_byte);
 
-    if (_debug) {
-      Serial.print("Sent ");
-      printStack(sendStack);
-      Serial.println();
-    }
+    delay(30);
+#if ENABLE_DEBUG == 1
+    printStack(sendStack);
+#endif
   }
 
 
@@ -167,26 +166,29 @@ private:
    *        Struct containing the config/command packet to print.
    */
   void printStack(stack _stack) {
-    Serial.println(F("Stack:"));
-    Serial.print(_stack.start_byte, HEX);
-    Serial.print(' ');
-    Serial.print(_stack.version, HEX);
-    Serial.print(' ');
-    Serial.print(_stack.length, HEX);
-    Serial.print(' ');
-    Serial.print(_stack.commandValue, HEX);
-    Serial.print(' ');
-    Serial.print(_stack.feedbackValue, HEX);
-    Serial.print(' ');
-    Serial.print(_stack.paramMSB, HEX);
-    Serial.print(' ');
-    Serial.print(_stack.paramLSB, HEX);
-    Serial.print(' ');
-    Serial.print(_stack.checksumMSB, HEX);
-    Serial.print(' ');
-    Serial.print(_stack.checksumLSB, HEX);
-    Serial.print(' ');
-    Serial.println(_stack.end_byte, HEX);
+    DBGLN(F("Sent Stack:"));
+    DBGHEX(_stack.start_byte);
+    DBGCH(' ');
+    DBGHEX(_stack.version);
+    DBGCH(' ');
+    DBGHEX(_stack.length);
+    DBGCH(' ');
+    DBGHEX(_stack.commandValue);
+    DBGCH(' ');
+    DBGHEX(_stack.feedbackValue);
+    DBGCH(' ');
+    DBGHEX(_stack.paramMSB);
+    DBGCH(' ');
+    DBGHEX(_stack.paramLSB);
+    DBGCH(' ');
+    if (!_variant) {
+      DBGHEX(_stack.checksumMSB);
+      DBGCH(' ');
+      DBGHEX(_stack.checksumLSB);
+      DBGCH(' ');
+    }
+    DBGLN(_stack.end_byte);
+    DBGLN(F(""));
   }
 };
 #endif

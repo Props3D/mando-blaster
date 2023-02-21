@@ -39,7 +39,7 @@ class EasyCounter
 
     static const int COUNTER_MODE_UP   =  1;
     static const int COUNTER_MODE_DOWN = -1;
-  
+
     EasyCounter() {}
 
     void begin(int lowNumber, int highNumber, int increment) {

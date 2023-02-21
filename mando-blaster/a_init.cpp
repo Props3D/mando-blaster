@@ -32,7 +32,8 @@ EasyCounter stunCounter;
  *   Variables must be marked as volatile because they are updated in the ISR.
  */
 uint8_t selectedTriggerMode = AMMO_MODE_FIRE;  // sets the fire mode to blaster to start
-bool playStartupSound = 1;                     // play ower up sound on startup
+bool playStartupTrack     = 1;                     // play power up sound on startup
+bool activateThemeTrack   = 0;                     // play theme track
 
 /**
  * function declarations
@@ -51,14 +52,14 @@ uint8_t getSelectedTrack(uint8_t idx);
 
 void setup() {
   Serial.begin(115200);
-  DBGLN("Starting setup");
+  DBGLN(F("Starting setup"));
 
   // Initialize the ammo counters for different modes
   fireCounter.begin(0, 10, EasyCounter::COUNTER_MODE_DOWN);
   stunCounter.begin(0, 10, EasyCounter::COUNTER_MODE_DOWN);
 
-  //initializes the audio player and sets the volume
-  audio.begin(25);
+  //initializes the audio player and sets the volume to max
+  audio.begin(30);
 
   // initialize all the leds
   // initialize the trigger led and set brightness
@@ -98,17 +99,23 @@ void loop(void) {
  * It will only play the track once.
  */
 void powerUp(void) {
-  if (playStartupSound) {
-    DBGLN("Powering up");
+  if (playStartupTrack) {
+    DBGLN(F("Powering up"));
+#ifndef ENABLE_EASY_AUDIO_PRO
+    // This is a hack around specifically for df mini players
+    audio.playTrack(AUDIO_TRACK_SILENCE);
+    delay(1000);
+#endif
     audio.playTrack(AUDIO_TRACK_START_UP);
-    playStartupSound = 0;
+    playStartupTrack = 0;
   }
 }
 
 /**
  * Checks the fire trigger momentary switch.
- * Short press should send an alternating blaster pulse
- * Long press should change modes between A/B and C/D
+ * - Immediate press should trigger ammo fire
+ * - Press and hold for 6 secs will play theme track
+ * - Long press and release should change ammo modes
  */
 bool checkTriggerSwitch(void) {
   // check trigger button
@@ -116,11 +123,24 @@ bool checkTriggerSwitch(void) {
   // check if a trigger is pressed.
   if (buttonStateFire == EasyButton::BUTTON_PRESSED) {
     handleAmmoDown();
+    activateThemeTrack = 0;
     return true;
   }
+
+  if (buttonStateFire == EasyButton::BUTTON_HOLD_PRESS) {
+    if (!activateThemeTrack && trigger.pressedLongerThan(6000)) {
+      audio.playTrack(AUDIO_TRACK_THEME);
+      activateThemeTrack = 1;
+      return true;
+    }
+  }
+
   if (buttonStateFire == EasyButton::BUTTON_LONG_PRESS) {
-    setNextAmmoMode();
-    return true;
+    if (!trigger.pressedLongerThan(6000)) {
+      activateThemeTrack = 0;
+      setNextAmmoMode();
+      return true;
+    }
   }
   return false;
 }
@@ -180,11 +200,11 @@ void changeAmmoMode(int mode) {
     // Check for Switching modes
     if (selectedTriggerMode == AMMO_MODE_FIRE) {
       blasterShot.initialize(fireLed.RED, fireLed.ORANGE);  // shot - flash with color fade
-      DBGLN("Fire Mode selected");
+      DBGLN(F("Fire Mode selected"));
     }
     if (selectedTriggerMode == AMMO_MODE_STUN) {
       blasterShot.initialize(fireLed.YELLOW, fireLed.WHITE);  // shot - flash with color fade
-      DBGLN("Stun Mode selected");
+      DBGLN(F("Stun Mode selected"));
     }
     audio.playTrack(getSelectedTrack(AMMO_MODE_IDX_CHGE));
     reloadAmmo();

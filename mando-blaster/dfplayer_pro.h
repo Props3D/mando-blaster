@@ -3,15 +3,8 @@
 
 #include <Arduino.h>
 
-const static char CMD_AT[] PROGMEM = "AT\r\n";
-const static char CMD_FUNCTION_MUSIC[] PROGMEM = "AT+FUNCTION=1\r\n";
-const static char CMD_PLAYMODE_SINGLE[] PROGMEM = "AT+PLAYMODE=3\r\n";
-const static char CMD_AMP_ON[] PROGMEM = "AT+AMP=ON\r\n";
-const static char CMD_PLAY_NUM[] PROGMEM = "AT+PLAYNUM=";
-const static char CMD_SET_VOLUME[] PROGMEM = "AT+VOL=";
-const static char CMD_END[] PROGMEM = "\r\n";
-const static char CMD_OK[] PROGMEM = "OK\r\n";
-const static char CMD_ERROR[] PROGMEM = "error";
+static const char CMD_OK[] PROGMEM =              {"OK\r\n"};
+static const char CMD_ERROR[] PROGMEM =           {"error"};
 
 /**
  * Define the basic structure of class DF Player Pro DF1201S, the implementation of basic methods.
@@ -19,15 +12,6 @@ const static char CMD_ERROR[] PROGMEM = "error";
  */
 class DFPlayerPro {
 public:
-  typedef enum {
-    SINGLECYCLE = 1,  // Repeat one song
-    ALLCYCLE,         // Repeat all
-    SINGLE,           // Play one song only
-    RANDOM,           // Random
-    FOLDER,           // Repeat all songs in folder
-    ERROR,
-  } ePlayMode_t;
-
   /**
    * Class constructor
    */
@@ -42,7 +26,7 @@ public:
    */
   bool begin(Stream& s) {
     _s = &s;
-    writeATCommand(getString(CMD_AT));
+    writeATCommand(F("AT\r\n"));
     return readAck();
   }
 
@@ -55,25 +39,28 @@ public:
    *   false Setting failed
   */
   bool setVolume(uint8_t vol) {
-    char* command = getString(CMD_SET_VOLUME);
-    uint8_t data[10];
-
+    char data[10];
+    memset(data, '\0', sizeof(char)*10);
     itoa(vol, data, 10);
-    strncat(command, data, 39 - strlen(command));
-    strncat_P(command, CMD_END, 39 - strlen(command));
-    writeATCommand(command);
+
+    drain();
+    writeBuffer(F("AT+VOL="));
+    writeBuffer(data);
+    writeBuffer(F("\r\n"));
+    delay(30);
+
     return readAck();
   }
 
   /**
    * Set working mode 
-   *   function eFunction_t:MUSIC,RECORD,UFDISK
+   *   function MUSIC=1,RECORD=2,UFDISK=3
    * Returns Boolean type, the result of seted
    *   true The setting succeeded
    *   false Setting failed
    */
   bool musicMode() {
-    writeATCommand(getString(CMD_FUNCTION_MUSIC));
+    writeATCommand(F("AT+FUNCTION=1\r\n"));
     if (readAck()) {
       delay(2000);
       return true;
@@ -83,13 +70,13 @@ public:
 
   /**
    * Set playback mode 
-   *   mode ePlayMode_t:SINGLECYCLE,ALLCYCLE,SINGLE,RANDOM,FOLDER
+   *   mode SINGLECYCLE=1,ALLCYCLE=2,SINGLE=3,RANDOM=4,FOLDER=5
    * Returns Boolean type, the result of seted
    *   true The setting succeeded
    *   false Setting failed
    */
   bool singlePlayMode() {
-    writeATCommand(getString(CMD_PLAYMODE_SINGLE));
+    writeATCommand(F("AT+PLAYMODE=3\r\n"));
     return readAck();
   }
 
@@ -100,7 +87,7 @@ public:
    *   false Setting failed
    */
   bool enableAMP() {
-    writeATCommand(getString(CMD_AMP_ON));
+    writeATCommand(F("AT+AMP=ON\r\n"));
     return readAck();
   }
 
@@ -112,83 +99,99 @@ public:
    *   true The setting succeeded
    *   false Setting failed
    */
-  bool playFileNum(int16_t num) {
-    char* command = getString(CMD_PLAY_NUM);
-
-    uint8_t data[10];
+  bool playFileNum(int16_t num, bool waitReply=false) {
+    char data[10];
+    memset(data, '\0', sizeof(char)*10);
     itoa(num, data, 10);
-    strncat(command, data, 39 - strlen(command));
-    strncat_P(command, CMD_END, 39 - strlen(command));
-    writeATCommand(command);
-    return true; // do not wait for confirmation
-    //return readAck();
+
+    drain();
+    writeBuffer(F("AT+PLAYNUM="));
+    writeBuffer(data);
+    writeBuffer(F("\r\n"));
+    delay(30);
+    if (waitReply)
+      return readAck();      
+    return true;
   }
 
 private:
   Stream* _s = NULL;
-  char _output[40];
 
-  void writeATCommand(char* command) {
-    DBGSTR(F("COMMAND: "));
-    DBGLN(command);
-    uint8_t data[40];
+  void drain() {
+    //DBGLN(F("Drain buffer"));
     while (_s->available()) {
       _s->read();
     }
-    uint8_t length = strlen(command);
-    for (uint8_t i = 0; i < length; i++)
-      data[i] = command[i];
-    _s->write(data, length);
   }
 
-  bool readAck() {
-    char* response = read(4);
-    DBGSTR(F("RESONSE: "));
-    DBGLN(response);
+  void writeBuffer(const __FlashStringHelper* buffer) {
+    DBGLN(buffer);
+    _s->print(buffer);
+  }
 
-    if (strcmp_P(response, CMD_OK) == 0) {
+  void writeATCommand(const __FlashStringHelper* command) {
+    DBGSTR(F("COMMAND: "));
+    DBGLN(command);
+    drain();
+    _s->print(command);
+    delay(30);
+  }
+
+  void writeBuffer(const char* buffer) {
+    DBGLOG(buffer);
+    _s->write(buffer);
+  }
+
+
+  bool readAck() {
+    char buf[30];
+    char* response = read(buf, 4);
+    DBGSTR(F("RESPONSE: "));
+    DBGLOG(response);
+
+     if (strcmp_P(response, CMD_OK) == 0) {
       return true;
     }
     return false;
   }
 
-  char* read(uint8_t len) {
+  char* read(char* buffer, uint8_t len) {
     size_t offset = 0, left = len;
-    long long curr = millis();
+    memset(buffer, '\0', sizeof(char)*30);
+    long curr = millis();
     if (len == 0) {
       while (1) {
         if (_s->available()) {
-          _output[offset] = (char)_s->read();
+          buffer[offset] = (char)_s->read();
           offset++;
         }
-        if ((_output[offset - 1]) == '\n' && (_output[offset - 2] == '\r')) break;
+        if ((buffer[offset - 1]) == '\n' && (buffer[offset - 2] == '\r')) break;
         if (millis() - curr > 1000) {
-          return getString(CMD_ERROR);
-          break;
+          return getString_P(buffer, CMD_ERROR, 6);
         }
       }
     } else {
       while (left) {
         if (_s->available()) {
-          _output[offset] = (char)_s->read();
+          buffer[offset] = (char)_s->read();
           left--;
           offset++;
         }
-        if (_output[offset - 1] == '\n' && _output[offset - 2] == '\r') break;
+        if (buffer[offset - 1] == '\n' && buffer[offset - 2] == '\r') break;
         if (millis() - curr > 1000) {
-          return getString(CMD_ERROR);
-          break;
+          return getString_P(buffer, CMD_ERROR, 6);
         }
       }
-      _output[len] = 0;
+      buffer[len] = 0;
     }
-    return _output;
+    return buffer;
   }
 
-  char* getString(const char* str) {
-    memset(_output, 0, sizeof(_output));
-    strncpy_P(_output, (char*)str, 39);
-    return _output;
+  char* getString_P(char* txtbuf, const char* str, uint8_t len) {
+    memset(txtbuf, '\0', sizeof(char)*30);
+    strncpy_P(txtbuf, str, len);
+    return txtbuf;
   }
+
 };
 #endif

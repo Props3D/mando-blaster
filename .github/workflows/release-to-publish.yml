@@ -1,0 +1,22 @@
+name: Props3D Mando Blaster CI - Release Publisher
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish-release:
+    name: Publish Release to Discord
+    runs-on: ubuntu-latest
+    steps:
+      - name: Official Release Discord Alert
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
+          nodetail: true
+          title: 'New Release for Mando-Blaster firmware is now available'
+          color: 0xff91a4
+          description: |
+            `${{ github.ref_name }}` Release
+            Click [Mando-Blaster Mini](https://github.com/Props3D/mando-blaster/releases/download/${{ github.ref_name }}/mando-blaster-mini-firmware.hex) to download!
+            Click [Mando-Blaster Pro](https://github.com/Props3D/mando-blaster/releases/download/${{ github.ref_name }}/mando-blaster-pro-firmware.hex) to download!

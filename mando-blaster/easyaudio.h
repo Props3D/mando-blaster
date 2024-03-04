@@ -3,11 +3,9 @@
 
 #define MINI_BAUD_RATE 9600
 #define PRO_BAUD_RATE 115200
-// uncomment if you are using the DFPlayer Pro
-//#define ENABLE_EASY_AUDIO_PRO 1
 
 #include <SoftwareSerial.h>
-#ifdef ENABLE_EASY_AUDIO_PRO
+#if ENABLE_EASY_AUDIO_PRO == 1
 #include "dfplayer_pro.h"
 #else
 #include "dfplayer_mini.h"
@@ -36,7 +34,7 @@
 class EasyAudio {
 private:
   SoftwareSerial _mySerial;
-#ifdef ENABLE_EASY_AUDIO_PRO
+#if ENABLE_EASY_AUDIO_PRO == 1
   DFPlayerPro _player;
 #else
   DFPlayerMini _player; // set to true if you have a chip variant of the DF PlayerMini
@@ -50,9 +48,15 @@ public:
     : _mySerial(rxPin, txPin){};
 
   bool begin(uint8_t vol) {
+#if ENABLE_EASY_AUDIO_MINI_VAR == 1
+    bool variant = true;
+#else
+    bool variant = false;
+#endif //ENABLE_EASY_AUDIO_MINI_VAR
+
 #if ENABLE_EASY_AUDIO == 1
     DBGLN(F("setup audio"));
-#ifdef ENABLE_EASY_AUDIO_PRO
+#if ENABLE_EASY_AUDIO_PRO == 1
     _mySerial.begin(PRO_BAUD_RATE);
     if (!_player.begin(_mySerial)) {
       DBGLN(F("DFPlayer failed"));
@@ -64,11 +68,11 @@ public:
     _player.setVolume(vol);    // initial volume, 30 is max, 25 makes the wife not angry
 #else
     _mySerial.begin(MINI_BAUD_RATE);
-    _player.begin(_mySerial, false);  //set Serial for DFPlayer-mini mp3 module
-    _player.volume(vol);                    //initial volume, 30 is max, 3 makes the wife not angry
-#endif
+    _player.begin(_mySerial, variant);  //set Serial for DFPlayer-mini mp3 module
+    _player.volume(vol);                //initial volume, 30 is max, 3 makes the wife not angry
+#endif // ENABLE_EASY_AUDIO_PRO
     delay(1000);
-#endif
+#endif // ENABLE_EASY_AUDIO
     return true;
   }
 
@@ -98,7 +102,7 @@ public:
     _playbackDelay = busyDelay;    
     _lastPlaybackTime = millis();
 #if ENABLE_EASY_AUDIO == 1
-  #ifdef ENABLE_EASY_AUDIO_PRO
+  #if ENABLE_EASY_AUDIO_PRO == 1
     _player.playFileNum(track);
   #else
     _player.playFromMP3Folder(track);
@@ -109,7 +113,7 @@ public:
   void playTrackAndWait(int track) {
     _lastPlaybackTime = millis();
 #if ENABLE_EASY_AUDIO == 1
-  #ifdef ENABLE_EASY_AUDIO_PRO
+  #if ENABLE_EASY_AUDIO_PRO == 1
     _player.playFileNum(track, true);
   #else
     _player.playFromMP3Folder(track);

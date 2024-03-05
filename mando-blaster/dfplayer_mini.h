@@ -17,10 +17,10 @@ const uint8_t NO_FEEDBACK = 0;  // no feedback requested
 const uint8_t EB = 0xEF;        // end byte
 
 /** Control Command Values */
+const uint8_t RESET  = 0x0c;
 const uint8_t VOLUME = 0x06;
 const uint8_t USE_MP3_FOLDER = 0x12;
 }
-
 
 /**
  *  Class for interacting with DFPlayerMini MP3 player based on the DFPlayerMini_Fast.
@@ -66,6 +66,11 @@ public:
     recStack.length = dfplayer::LEN;
     recStack.end_byte = dfplayer::EB;
 
+    if (_variant) {
+      reset();
+      delay(200);
+    }
+
     return true;
   }
 
@@ -96,6 +101,16 @@ public:
     sendStack.feedbackValue = dfplayer::NO_FEEDBACK;
     sendStack.paramMSB = (trackNum >> 8) & 0xFF;
     sendStack.paramLSB = trackNum & 0xFF;
+
+    findChecksum(sendStack);
+    sendData();
+  }
+
+  void reset() {
+    sendStack.commandValue = dfplayer::RESET;
+    sendStack.feedbackValue = dfplayer::NO_FEEDBACK;
+    sendStack.paramMSB = 0;
+    sendStack.paramLSB = 0;
 
     findChecksum(sendStack);
     sendData();
@@ -187,7 +202,8 @@ private:
       DBGHEX(_stack.checksumLSB);
       DBGCH(' ');
     }
-    DBGLN(_stack.end_byte);
+    DBGHEX(_stack.end_byte);
+    DBGLN(F(""));
     DBGLN(F(""));
   }
 };

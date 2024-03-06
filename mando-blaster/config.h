@@ -10,7 +10,7 @@
 
 // Update these based on the DF player you've included in your circuit
 #define ENABLE_EASY_AUDIO_PRO        0 // Enable the DF Pro otherwise it assumes DF Mini
-#define ENABLE_EASY_AUDIO_MINI_VAR   0 // Enable DF Mini Variant code
+#define ENABLE_EASY_AUDIO_MINI_VAR   1 // Enable DF Mini Variant code
 
 // To disable any component set value to 0
 #define ENABLE_DEBUG            1 //Enable Debugging

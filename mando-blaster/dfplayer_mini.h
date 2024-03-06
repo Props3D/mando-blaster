@@ -22,6 +22,7 @@ const uint8_t VOLUME = 0x06;
 const uint8_t USE_MP3_FOLDER = 0x12;
 }
 
+
 /**
  *  Class for interacting with DFPlayerMini MP3 player based on the DFPlayerMini_Fast.
  *
@@ -52,7 +53,7 @@ public:
    *      Number of ms allowed for the MP3 player to respond (timeout) to a query.
    *  Returns True.
    */
-  bool begin(Stream& stream, bool variant = false) {
+  bool begin(Stream& stream, bool variant) {
     _serial = &stream;
     _variant = variant;
 
